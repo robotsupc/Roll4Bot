@@ -22,22 +22,26 @@ control::control() {
 
 }
 void control::setSTEPe(uint8_t p1, uint8_t p2) {
-  motE.stepPIN = {p1, p2};
+  motE.stepPIN[0] = p1;
+  motE.stepPIN[1] = p2;
   pinMode(motE.stepPIN[0],OUTPUT);
   pinMode(motE.stepPIN[1],OUTPUT);
 }
 void control::setDIRe(uint8_t p1, uint8_t p2) {
-  motE.dirPIN = {p1, p2};
+  motE.dirPIN[0] = p1;
+  motE.dirPIN[1] = p2;
   pinMode(motE.dirPIN[0],OUTPUT);
   pinMode(motE.dirPIN[1],OUTPUT);
 }
 void control::setSTEPd(uint8_t p1, uint8_t p2) {
-  motD.stepPIN = {p1, p2};
+  motD.stepPIN[0] = p1;
+  motD.stepPIN[1] = p2;
   pinMode(motD.stepPIN[0],OUTPUT);
   pinMode(motD.stepPIN[1],OUTPUT);
 }
 void control::setDIRd(uint8_t p1, uint8_t p2) {
-  motD.dirPIN = {p1, p2};
+  motD.dirPIN[0] = p1;
+  motD.dirPIN[1] = p2;
   pinMode(motD.dirPIN[0],OUTPUT);
   pinMode(motD.dirPIN[1],OUTPUT);
 }

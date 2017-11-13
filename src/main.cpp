@@ -5,9 +5,10 @@ control Controlador;
 
 void setup() {
   Controlador.setDIRd(D0, D1);
-  Controlador.setSTEPd(A0, A1);
-  Controlador.setDIRe(D2,D3);
-  Controlador.setSTEPe(A2, A3);
+  Controlador.setSTEPd(D2, D3);
+  Controlador.setDIRe(D4,D5);
+  Controlador.setSTEPe(D6, D7);
+
     // put your setup code here, to run once:
 }
 
