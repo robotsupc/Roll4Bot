@@ -1,5 +1,46 @@
 #include "control.h"
-#include <Arduino.h>
+
+void control::sendDriverData(control::stepDriver &d) {
+  if (d.flag) {
+    digitalWrite(d.dirPIN[0], HIGH);
+    digitalWrite(d.dirPIN[1], HIGH);
+  }
+  else {
+    digitalWrite(d.dirPIN[0], LOW);
+    digitalWrite(d.dirPIN[1], LOW);
+  }
+  analogWrite(d.stepPIN[0], motE.vel);
+  analogWrite(d.stepPIN[1], motE.vel);
+}
+
+void control::sendData() {
+  sendDriverData(motE);
+  sendDriverData(motD);
+}
+
+control::control() {
+
+}
+void control::setSTEPe(uint8_t p1, uint8_t p2) {
+  motE.stepPIN = {p1, p2};
+  pinMode(motE.stepPIN[0],OUTPUT);
+  pinMode(motE.stepPIN[1],OUTPUT);
+}
+void control::setDIRe(uint8_t p1, uint8_t p2) {
+  motE.dirPIN = {p1, p2};
+  pinMode(motE.dirPIN[0],OUTPUT);
+  pinMode(motE.dirPIN[1],OUTPUT);
+}
+void control::setSTEPd(uint8_t p1, uint8_t p2) {
+  motD.stepPIN = {p1, p2};
+  pinMode(motD.stepPIN[0],OUTPUT);
+  pinMode(motD.stepPIN[1],OUTPUT);
+}
+void control::setDIRd(uint8_t p1, uint8_t p2) {
+  motD.dirPIN = {p1, p2};
+  pinMode(motD.dirPIN[0],OUTPUT);
+  pinMode(motD.dirPIN[1],OUTPUT);
+}
 
 int control::velD(){
   return motD.vel;
@@ -14,8 +55,6 @@ bool control::dirD(){
 bool control::dirE(){
   return motE.flag;
 }
-
-
 void control::avanca(int x, int y){
 
   if(y>0){
@@ -51,4 +90,5 @@ void control::avanca(int x, int y){
     motE.flag = !motE.flag;
     motE.vel = -motE.vel;
   }
+  sendData();
 }
