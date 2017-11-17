@@ -9,8 +9,8 @@ void control::sendDriverData(control::stepDriver &d) {
     digitalWrite(d.dirPIN[0], LOW);
     digitalWrite(d.dirPIN[1], LOW);
   }
-  analogWrite(d.stepPIN[0], motE.vel);
-  analogWrite(d.stepPIN[1], motE.vel);
+  analogWrite(d.stepPIN[0], d.vel);
+  analogWrite(d.stepPIN[1], d.vel);
 }
 
 void control::sendData() {
@@ -59,6 +59,8 @@ bool control::dirD(){
 bool control::dirE(){
   return motE.flag;
 }
+
+//TODO configurar definitivament les velocitats de sortida
 void control::avanca(int x, int y){
 
   if(y>0){
