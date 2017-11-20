@@ -208,15 +208,15 @@ module columna(){
 
 
 module base_1(){
-    translate([x/2+radi,0,0])
+    translate([x/2-radi,0,0])
     mirror([1,0,0])
     part1();
-    translate([-x/2-radi,0,0])
+    translate([-x/2+radi,0,0])
     part1();
-    translate([0,y/2+radi,0])
+    translate([0,y/2-radi,0])
     mirror([0,1,0])
     part2();
-    translate([0,-y/2-radi,0])  
+    translate([0,-y/2+radi,0])  
     part2();
     centre();
 }
@@ -242,24 +242,24 @@ module base_2(){
 
 module sup_mot(){
     difference(){
-        cube([radi,40,altura],center=true);
+        cube([2*radi,40,altura],center=true);
         rotate([0,90,0])
-        cylinder(r=12,h=radi+1, center=true);
+        cylinder(r=12,h=2*radi+1, center=true);
         translate([0,-31/2,-31/2])
         rotate([0,90,0])
-        cylinder(r=f_tornillo,h=radi+1, $fn=20,center=true);    
+        cylinder(r=f_tornillo,h=2*radi+1, $fn=20,center=true);    
         
         translate([0,31/2,31/2])
         rotate([0,90,0])
-        cylinder(r=f_tornillo,h=radi+1, $fn=20,center=true);   
+        cylinder(r=f_tornillo,h=2*radi+1, $fn=20,center=true);   
         
         translate([0,31/2,-31/2])
         rotate([0,90,0])
-        cylinder(r=f_tornillo,h=radi+1, $fn=20,center=true);   
+        cylinder(r=f_tornillo,h=2*radi+1, $fn=20,center=true);   
         
         translate([0,-31/2,31/2])
         rotate([0,90,0])
-        cylinder(r=f_tornillo,h=radi+1, $fn=20,center=true); 
+        cylinder(r=f_tornillo,h=2*radi+1, $fn=20,center=true); 
       
         
         translate([0,-es_forats,0]){
@@ -269,16 +269,16 @@ module sup_mot(){
             cylinder(r=f_tornillo,h=altura+1, $fn=20,center=true);
          }
         translate([0,-es_forats,altura/2-5]){
-            cube([radi+1,radi,rosca],center=true);
+            cube([2*radi+1,radi,2*rosca],center=true);
         }
         translate([0,es_forats,altura/2-5]){
-            cube([radi+1,radi,rosca],center=true);
+            cube([2*radi+1,radi,2*rosca],center=true);
         }
       translate([0,-es_forats,-altura/2+5]){
-            cube([radi+1,radi,rosca],center=true);
+            cube([2*radi+1,radi,2*rosca],center=true);
         }    
         translate([0,es_forats,-altura/2+5]){
-            cube([radi+1,radi,rosca],center=true);
+            cube([2*radi+1,radi,2*rosca],center=true);
         }  
     }
 }
