@@ -1,0 +1,220 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Webjoystick</title>
+</head>
+
+<body>
+    <center>
+        <table>
+            <tr>
+                <td width="400">
+                    <center>
+                        <canvas id="canvasLeft" height="400" width="100" style="border:1px solid #d3d3d3; margin-left: 150px; float:left"></canvas>
+                    </center>
+
+                </td>
+                <td>
+                    <canvas id="canvasRight" height="100" width="400" style="border:1px solid #d3d3d3; float:left"></canvas>
+                </td>
+            </tr>
+        </table>
+    </center>
+    
+    <table>
+        <tr>
+            <td>Raw power:</td>
+            <td id="raw_power">0</td>
+        </tr>
+        <tr>
+            <td>Raw direction:</td>
+            <td id="raw_direction">0</td>
+        </tr>
+    </table>
+
+    <table>
+        <tr>
+            <td>Motor Left:</td>
+            <td id="motor_left">0</td>
+        </tr>
+        <tr>
+            <td>Motor Right:</td>
+            <td id="motor_right">0</td>
+        </tr>
+    </table>
+
+
+<script type="text/javascript">
+    
+    var canvas1, context1, style, drag = null, draggedPoint;
+    var rawPower, rawDirection;
+    var table_raw_power = document.getElementById('raw_power');
+    var table_raw_direction = document.getElementById('raw_direction');
+
+    var table_motor_left = document.getElementById('motor_left');
+    var table_motor_right = document.getElementById('motor_right');
+
+
+    function init() {
+    
+        // default styles
+        style = {
+            curve:	{ width: 6, color: "#333" },
+            line:	{ width: 1, color: "#C00" },
+            interpolation: {width: 2},
+            point: { radius: 10, width: 2, color: "#900", fill: "rgba(200,200,200,0.5)", arc1: 0, arc2: 2 * Math.PI }
+        }
+    
+        // line style defaults
+        contextLeft.lineCap = "round";
+        contextRight.lineJoin = "round";
+    
+        // event handlers (only canvas1)
+        canvasLeft.onmousedown = mouseDownLeft;
+        canvasRight.onmousedown = mouseDownRight;
+    
+    }
+        
+    function mouseDownLeft(event) {
+        p = mousePos(event, canvasLeft);
+
+        rawPower = 1 - (p.y / canvasLeft.height);
+            
+        contextLeft.clearRect(0, 0, canvasLeft.width, canvasLeft.height);  // Clear canvas
+        contextLeft.beginPath();
+        if (rawPower > 0.95) {
+            rawPower = 1;
+            contextLeft.rect(0, 0, 100, 20);
+        } else if (rawPower < 0.05) {
+            rawPower = 0;
+            contextLeft.rect(0, canvasLeft.height - 20, 100, 20);
+        } else {
+            contextLeft.rect(0, p.y, 100, 10);
+        }
+            
+        contextLeft.fill();
+        contextLeft.closePath();
+
+        table_raw_power.innerHTML = rawPower;
+
+        calcPower();
+    }
+
+    function mouseDownRight(event) {
+        p = mousePos(event, canvasRight);
+
+        rawDirection = p.x / canvasRight.width;
+
+        contextRight.clearRect(0, 0, canvasRight.width, canvasRight.height);  // Clear canvas
+        contextRight.beginPath()
+        if (rawDirection > 0.95) {
+            rawDirection = 1;
+            contextRight.rect(canvasRight.width - 20, 0, 20, 100);
+        }
+        else if (rawDirection > 0.475 && rawDirection < 0.525) {
+            rawDirection = 0.5;
+            contextRight.rect((canvasRight.width / 2) - 10, 0, 20, 100);
+        }
+        else if (rawDirection < 0.05) {
+            rawDirection = 0;
+            contextRight.rect(0, 0, 20, 100);
+        }
+        else {
+            contextRight.rect(p.x, 0, 10, 100);
+        }
+        contextRight.fill();
+        contextRight.closePath();
+
+            
+        table_raw_direction.innerHTML = rawDirection;
+
+        calcPower();
+    }
+
+    function calcPower() {
+        direction = 1 - (rawDirection*2);
+        table_motor_left.innerHTML = 1 - direction;
+        table_motor_right.innerHTML = 1 - (direction * -1);
+    }
+
+    function calcMotors(nJoyX, nJoyY) {
+        // nJoyX: Joystick X input                     (-128..+127)
+        // nJoyY: Joystick Y input                     (-128..+127)
+
+        let fPivYLimit = 32.0;
+
+        // Calculate Drive Turn output due to Joystick X input
+        if (nJoyY >= 0) {
+            // Forward
+            nMotPremixL = (nJoyX >= 0) ? 127.0 : (127.0 + nJoyX);
+            nMotPremixR = (nJoyX >= 0) ? (127.0 - nJoyX) : 127.0;
+        } else {
+            // Reverse
+            nMotPremixL = (nJoyX >= 0) ? (127.0 - nJoyX) : 127.0;
+            nMotPremixR = (nJoyX >= 0) ? 127.0 : (127.0 + nJoyX);
+        }
+
+        // Scale Drive output due to Joystick Y input (throttle)
+        nMotPremixL = nMotPremixL * nJoyY / 128.0;
+        nMotPremixR = nMotPremixR * nJoyY / 128.0;
+
+        // Now calculate pivot amount
+        // - Strength of pivot (nPivSpeed) based on Joystick X input
+        // - Blending of pivot vs drive (fPivScale) based on Joystick Y input
+        nPivSpeed = nJoyX;
+        fPivScale = (abs(nJoyY) > fPivYLimit) ? 0.0 : (1.0 - abs(nJoyY) / fPivYLimit);
+
+        // Calculate final mix of Drive and Pivot
+        nMotMixL = (1.0 - fPivScale) * nMotPremixL + fPivScale * (nPivSpeed);
+        nMotMixR = (1.0 - fPivScale) * nMotPremixR + fPivScale * (-nPivSpeed);
+
+        return { L: nMotMixL, R: nMotMixR};
+    }
+
+    // Draw circles around vertices to facilitate drag and drop
+    function drawVertices (ctx, style, points) {
+        for (var i = 0; i < points.length; i++) {
+            var p = points[i];
+            ctx.lineWidth = style.point.width;
+            ctx.strokeStyle = style.point.color;
+            ctx.fillStyle = style.point.fill;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, style.point.radius, style.point.arc1, style.point.arc2, true);
+            ctx.fill();
+            ctx.stroke();
+        }
+    }
+    
+    
+    // event parser
+    function mousePos(evt, canvas) {
+        var rect = canvas.getBoundingClientRect();
+        return {
+            x: evt.clientX - rect.left,
+            y: evt.clientY - rect.top
+        };
+    }
+    
+    /**
+        * Start ("main method")
+        */
+    
+    // Assign canvas and context variables
+    var canvasLeft = document.getElementById("canvasLeft");
+    var contextLeft = canvasLeft.getContext("2d");
+    
+    var canvasRight = document.getElementById("canvasRight");
+    var contextRight = canvasRight.getContext("2d");
+        
+    init();
+    
+    /**
+        * Auxiliary functions
+        */
+    
+    
+    </script>
+</body>
+</html>
