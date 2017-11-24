@@ -1,8 +1,8 @@
-x=100;
-y=200;
-z=10;
+x=150;
+y=250;
+z=20;
 altura=42; //stepper
-radi=5;
+radi=10;
 f_tornillo=1.8;
 rosca=2;
 es_forats=10;
@@ -23,60 +23,20 @@ module part1(){
                 rotate([180])
                 cantonada();
             }  
-            translate([radi/2,y/2-radi/2])
-                circle(f_tornillo,$fn=20);
-            translate([-radi/2,y/2-3*radi/2])
-                circle(f_tornillo,$fn=20);
-            translate([radi/2,-y/2+radi/2])
-                circle(f_tornillo,$fn=20);
-            translate([-radi/2,-y/2+3*radi/2])
-                circle(f_tornillo,$fn=20);
-            if(radi<5*f_tornillo){
-                for(i=[0:5:y/2-2*radi-1]){
+                for(i=[0:2*es_forats:y/2-2*radi-altura-4]){
                     translate([0,i])
                     circle(f_tornillo,$fn=20);
                     translate([0,-i])
                     circle(f_tornillo,$fn=20);
                 }
             }
-            else{
-                for(i=[0:5:y/2-2*radi-1]){
-                    translate([-radi/2,i])
-                    circle(f_tornillo,$fn=20);
-                    translate([-radi/2,-i])
-                    circle(f_tornillo,$fn=20);
-                }
-                for(i=[0:5:y/2-2*radi-1]){
-                    translate([radi/2,i])
-                    circle(f_tornillo,$fn=20);
-                    translate([radi/2,-i])
-                    circle(f_tornillo,$fn=20);
-                }
-                
-                
-                
-            }
-                
         }
-    } 
-    translate([-radi,y/2-2*radi-z,0])
-    cube([2*radi,2*radi+z,z/3]);
-    
-    translate([-radi,y/2-2*radi-z,2*z/3])
-    cube([2*radi,2*radi+z,z/3]);
-    
-    translate([-radi,-y/2,0])
-    cube([2*radi,2*radi+z,z/3]);
-    
-    translate([-radi,-y/2,2*z/3])
-    cube([2*radi,2*radi+z,z/3]);
     }
 }
 
 module part2(){
     difference(){
         linear_extrude(z){
-            difference(){
                 hull(){
                     translate([x/2-radi,0])
                     cantonada();
@@ -84,24 +44,7 @@ module part2(){
                     rotate([0,0,90])
                     cantonada();
                 }
-                translate([x/2-radi/2,radi/2])
-                        circle(f_tornillo,$fn=20);
-                translate([x/2-3*radi/2,-radi/2])
-                        circle(f_tornillo,$fn=20);
-                translate([-x/2+radi/2,radi/2])
-                        circle(f_tornillo,$fn=20);
-                translate([-x/2+3*radi/2,-radi/2])
-                        circle(f_tornillo,$fn=20);
-            }
         } 
-    
-    translate([x/2-2*radi-z,-radi,z/3])
-    cube([2*radi+z,2*radi,z/3]);
-    translate([-x/2,-radi,z/3])
-    cube([2*radi+z,2*radi,z/3]);
-
-
-    
     }
 }
 module centre(){      
@@ -119,94 +62,9 @@ module centre(){
                     translate([-x/2+2*radi,y/2-2*radi-z,0])
                     cube(z);
             }
-        }
-        
-    }
-    difference(){
-        union(){
-            translate([x/2-z,y/2-z-2*radi,0])
-            cube([2*radi,2*radi,z/3]);
-            translate([x/2-z,y/2-z-2*radi,2*z/3])
-            cube([2*radi,2*radi,z/3]);
-        }
-        translate([x/2-z/2,y/2-z-2*radi,-1])
-        cylinder(r=f_tornillo,h=z+2,$fn=20);
-        translate([x/2-z/2,y/2-z/2-2*radi,-1])
-        cylinder(r=f_tornillo,h=z+2,$fn=20);
-        
-    }
-    difference(){
-        union(){
-            translate([-x/2,-y/2+2*radi,0])
-            cube([2*radi,2*radi,z/3]);
-            translate([-x/2,-y/2+2*radi,2*z/3])
-            cube([2*radi,2*radi,z/3]);
-        }
-        translate([-x/2+z/2,-y/2+z+2*radi,-1])
-        cylinder(r=f_tornillo,h=z+2,$fn=20);
-        translate([-x/2+z/2,-y/2+z/2+2*radi,-1])
-        cylinder(r=f_tornillo,h=z+2,$fn=20);
-        
-        
-        
-    }
-    difference(){
-        union(){
-            translate([-x/2,y/2-z-2*radi,0])
-            cube([2*radi,2*radi,z/3]);
-            translate([-x/2,y/2-z-2*radi,2*z/3])
-            cube([2*radi,2*radi,z/3]);
-        }
-        translate([-x/2+z/2,y/2-z-2*radi,-1])
-         cylinder(r=f_tornillo,h=z+2,$fn=20);
-        translate([-x/2+z/2,y/2-z/2-2*radi,-1])
-         cylinder(r=f_tornillo,h=z+2,$fn=20);
-    }
-    difference(){
-        union(){
-            translate([x/2-z,-y/2+2*radi,0])
-            cube([2*radi,2*radi,z/3]);
-            translate([x/2-z,-y/2+2*radi,2*z/3])
-            cube([2*radi,2*radi,z/3]);
-        }
-        translate([x/2-z/2,-y/2+z+2*radi,-1])
-        cylinder(r=f_tornillo,h=z+2,$fn=20);
-        translate([x/2-z/2,-y/2+z/2+2*radi,-1])
-        cylinder(r=f_tornillo,h=z+2,$fn=20);
-        
-    }
-    translate([x/2-2*z,y/2-2*radi,z/3])
-    cube([2*radi,2*radi,z/3]);
-    
-    translate([-x/2+z,y/2-2*radi,z/3])
-    cube([2*radi,2*radi,z/3]);
-    
-    translate([x/2-2*z,-y/2,z/3])
-    cube([2*radi,2*radi,z/3]);
-    
-    translate([-x/2+z,-y/2,z/3])
-    cube([2*radi,2*radi,z/3]);
+        } 
+    }      
 }
-
-module columna(){
-    linear_extrude(altura){
-        difference(){
-            union(){
-                rotate(180)
-                cantonada();
-                square(radi);
-                translate([0,-radi])
-                square(radi);
-            }
-            translate([radi/2,radi/2])
-            circle(f_tornillo,$fn=20);
-            translate([-radi/2,-radi/2])
-            circle(f_tornillo,$fn=20);
-        }
-    }  
-}
-
-
 module base_1(){
     translate([x/2-radi,0,0])
     mirror([1,0,0])
@@ -224,88 +82,49 @@ module base_1(){
 
 module base_2(){
     base_1();
-    translate([0,0,altura+z])
-    base_1();
-    translate([-x/2+radi,y/2-radi,z])
-    columna();
-    translate([x/2-radi,y/2-radi,z])
-    rotate([0,0,-90])
-    columna();
-    translate([-x/2+radi,-y/2+radi,z])
-    rotate([0,0,90])
-    columna();
-    translate([x/2-radi,-y/2+radi,z])
-    rotate([0,0,180])
-    columna();
+    translate([-x/2,-y/2+2*radi,z])
+    sup_mot();
+    translate([x/2,-y/2+2*radi,z])
+    mirror([1,0,0])
+    sup_mot();
+    translate([x/2-2*radi,y/2-2*radi,z])
+    mirror([0,1,0])
+    sup_mot();
+    translate([-x/2,y/2-2*radi,z])
+    mirror([0,1,0])
+    sup_mot();
 }
 
 
 module sup_mot(){
     difference(){
-        cube([2*radi,40,altura],center=true);
+        cube([2*radi,altura+4.5,altura]);
+        translate([-.5,20,altura/2])
         rotate([0,90,0])
-        cylinder(r=12,h=2*radi+1, center=true);
-        translate([0,-31/2,-31/2])
-        rotate([0,90,0])
-        cylinder(r=f_tornillo,h=2*radi+1, $fn=20,center=true);    
+        cylinder(r=12,h=2*radi+1);
         
-        translate([0,31/2,31/2])
-        rotate([0,90,0])
-        cylinder(r=f_tornillo,h=2*radi+1, $fn=20,center=true);   
         
-        translate([0,31/2,-31/2])
+        translate([-.5,5.5,5.5])
         rotate([0,90,0])
-        cylinder(r=f_tornillo,h=2*radi+1, $fn=20,center=true);   
+        cylinder(r=f_tornillo,h=2*radi+1, $fn=20);    
         
-        translate([0,-31/2,31/2])
+        translate([-.5,36.5,5.5])
         rotate([0,90,0])
-        cylinder(r=f_tornillo,h=2*radi+1, $fn=20,center=true); 
-      
+        cylinder(r=f_tornillo,h=2*radi+1, $fn=20);   
         
-        translate([0,-es_forats,0]){
-            cylinder(r=f_tornillo,h=altura+1, $fn=20,center=true);
-        }
-         translate([0,es_forats,0]){
-            cylinder(r=f_tornillo,h=altura+1, $fn=20,center=true);
-         }
-        translate([0,-es_forats,altura/2-5]){
-            cube([2*radi+1,radi,2*rosca],center=true);
-        }
-        translate([0,es_forats,altura/2-5]){
-            cube([2*radi+1,radi,2*rosca],center=true);
-        }
-      translate([0,-es_forats,-altura/2+5]){
-            cube([2*radi+1,radi,2*rosca],center=true);
-        }    
-        translate([0,es_forats,-altura/2+5]){
-            cube([2*radi+1,radi,2*rosca],center=true);
-        }  
+        translate([-.5,5.5,36.5])
+        rotate([0,90,0])
+        cylinder(r=f_tornillo,h=2*radi+1, $fn=20);   
+        
+        translate([-.5,36.5,36.5])
+        rotate([0,90,0])
+        cylinder(r=f_tornillo,h=2*radi+1, $fn=20); 
     }
+        translate([radi,-radi,0])
+    linear_extrude(altura){
+        cantonada();
+        translate([-radi,0])
+        square(radi);
+        }
 }
-module impressio(){
-    translate([5,5,0])
-    rotate([0,90,45])
-    part1();
-    translate([-5,-5,0])
-    rotate([0,90,45])
-    part1();
-    translate([15,15,0])
-    rotate([-90,0,-45])
-    part2();
-    translate([-15,-15,0])
-    rotate([-90,0,-45])
-    part2();
-    translate([70,20,0])
-    rotate([0,90,0])
-    sup_mot();
-    translate([20,70,0])
-    rotate([0,90,0])
-    sup_mot();
-    translate([-70,-20,0])
-    rotate([0,90,0])
-    sup_mot();
-    translate([-20,-70,0])
-    rotate([0,90,0])
-    sup_mot();
-}
-impressio();
+base_2();
